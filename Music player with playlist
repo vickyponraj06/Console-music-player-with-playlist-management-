@@ -1,0 +1,110 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+class Song {
+public:
+    std::string title;
+    std::string artist;
+
+    Song(const std::string &t, const std::string &a) : title(t), artist(a) {}
+
+    void display() const {
+        std::cout << "Title: " << title << ", Artist: " << artist << std::endl;
+    }
+};
+
+class Playlist {
+private:
+    std::vector<Song> songs;
+    int currentSongIndex;
+
+public:
+    Playlist() : currentSongIndex(0) {}
+
+    void addSong(const Song &song) {
+        songs.push_back(song);
+    }
+
+    void play() {
+        if (songs.empty()) {
+            std::cout << "Playlist is empty." << std::endl;
+            return;
+        }
+        std::cout << "Now playing: ";
+        songs[currentSongIndex].display();
+    }
+
+    void next() {
+        if (songs.empty()) {
+            std::cout << "Playlist is empty." << std::endl;
+            return;
+        }
+        currentSongIndex = (currentSongIndex + 1) % songs.size();
+        play();
+    }
+
+    void previous() {
+        if (songs.empty()) {
+            std::cout << "Playlist is empty." << std::endl;
+            return;
+        }
+        currentSongIndex = (currentSongIndex - 1 + songs.size()) % songs.size();
+        play();
+    }
+
+    void showPlaylist() const {
+        if (songs.empty()) {
+            std::cout << "Playlist is empty." << std::endl;
+            return;
+        }
+        std::cout << "Playlist:" << std::endl;
+        for (size_t i = 0; i < songs.size(); ++i) {
+            std::cout << i + 1 << ". ";
+            songs[i].display();
+        }
+    }
+};
+
+int main() {
+    Playlist playlist;
+
+    playlist.addSong(Song("Song 1", "Artist A"));
+    playlist.addSong(Song("Song 2", "Artist B"));
+    playlist.addSong(Song("Song 3", "Artist C"));
+
+    int choice;
+
+    do {
+        std::cout << "\nMenu:\n";
+        std::cout << "1. Play current song\n";
+        std::cout << "2. Next song\n";
+        std::cout << "3. Previous song\n";
+        std::cout << "4. Show playlist\n";
+        std::cout << "5. Exit\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+        case 1:
+            playlist.play();
+            break;
+        case 2:
+            playlist.next();
+            break;
+        case 3:
+            playlist.previous();
+            break;
+        case 4:
+            playlist.showPlaylist();
+            break;
+        case 5:
+            std::cout << "Exiting..." << std::endl;
+            break;
+        default:
+            std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    } while (choice != 5);
+
+    return 0;
+}
